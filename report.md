@@ -60,11 +60,9 @@ output:
 \pagebreak
 
 # Introduction
+Pour le rapport suivant, nous détaillerons notre travail pratique où nous avons employé trois méthodes distinctes pour classer des images de chiffres issues de la base de données MNIST : un perceptron multicouche (MLP), un MLP utilisant l'Histogramme de Gradients Orientés (HOG), et un réseau de neurones convolutif (CNN). Ensuite, nous avons développé un autre CNN pour classifier des radiographies thoraciques, afin de distinguer les cas normaux de ceux présentant une pneumonie.
 
-
-
-
-
+Ce projet a été réalisé en utilisant Keras, une bibliothèque de réseaux neuronaux de haut niveau écrite en Python et capable de fonctionner avec TensorFlow. Keras simplifie la création de modèles de machine learning complexes grâce à son interface intuitive et sa capacité à intégrer facilement avec TensorFlow, offrant ainsi un environnement robuste pour le prototypage rapide et l'exécution de réseaux de neurones profonds. Ce rapport présentera les résultats obtenus avec chacune des méthodologies appliquées, analysant leur efficacité et précision dans les tâches de classification proposées.
 
 
 # Reconnaissance des chiffres à partir des données brutes
@@ -72,8 +70,6 @@ output:
 > Quel est l'algorithme d'apprentissage utilisé pour optimiser les poids des réseaux de neurones ? Quels sont les paramètres (arguments) utilisés par cet algorithme ? Quelle fonction de coût est utilisée ? Veuillez fournir l'équation (ou les équations).
 
 L'algorithme utilisé pour optimiser les poids est RMSprop (Root Mean Square Propagation).
-
-
 
 
 $$
@@ -90,7 +86,8 @@ où $N$ est le nombre d'échantillons, $\vec{p_i}$ est la sortie du réseau de n
 
 ## Réseau neuronal superficiel
 
-
+# Reconnaissance de chiffres à partir de données brutes
+// todo
 
 # Reconnaissance des chiffres à partir des caractéristiques des données d'entrée
 
@@ -236,8 +233,6 @@ Pour nous, les deux derniers systèmes sont les meilleurs. Par rapport aux autre
 
 # Reconnaissance de chiffres par réseau neuronal convolutif
 
-# Reconnaissance des chiffres par réseau neuronal convolutionnel
-
 ## Réseau neuronal convolutionnel profond
 
 - Époques : 50
@@ -335,23 +330,76 @@ _________________________________________________________________
   \label{fig:hog-features}
 \end{figure}
 
+## Commentaires
+Encore une fois, le modèle avec le moins de neurones s'avère être le meilleur. Pas nécessairement en termes de performances telles qu'indiquées par la fonction de perte, qui est légèrement plus élevée que pour les autres modèles. Mais au moins, il ne surajuste pas, contrairement aux deux autres modèles restants.
 
+Dans cet ensemble, la confusion est plus répandue. Nous ne pouvons pas observer un numéro spécifique qui échoue fréquemment dans tous les modèles.
 
+# Radiographie pulmonaire pour détecter une pneumonie
+## Réseau neuronal convolutionnel profond
+- Nombre d'épques : 50
 
+## Expérimentation
+### Perte et précision
+\begin{figure}[H]
+  \centering
+  \subfloat[valeurs de perte d'entraînement et de validation]{
+    \includegraphics[scale=0.45]{./figures/CCN_pneumonia_model_loss_g.png}
+    \label{fig:error-graph}
+  }\quad % Adjusted for more consistent spacing
+  \subfloat[valeurs de précision d'entraînement et de validation]{
+    \includegraphics[scale=0.45]{./figures/CCN_pneumonia_model_accuracy_g.png}
+    \label{fig:confusion-matrix}
+  }
+  \caption{Valeurs de perte et de précision d'entraînement et de validation}
+  \label{fig:hog-features}
+\end{figure}
 
+### Matrices de confusion
+\begin{figure}[H]
+  \centering
+  \subfloat[Set de validation]{
+    \includegraphics[scale=0.45]{./figures/CCN_pneumonia_matrix_validation.png}
+    \label{fig:error-graph}
+  }\quad % Adjusted for more consistent spacing
+  \subfloat[Set de test]{
+    \includegraphics[scale=0.45]{./figures/CCN_pneumonia_matrix_test.png}
+    \label{fig:confusion-matrix}
+  }
+  \caption{Matrices de confusion du modèle}
+  \label{fig:hog-features}
+\end{figure}
 
+## Commentaires
+Un des problèmes principaux rencontrés est lié à la taille restreinte de notre ensemble de données de validation. Cette limitation a probablement contribué à la difficulté du modèle à généraliser efficacement, ce qui s'est traduit par des performances mitigées lors de la phase de test. Une base de données plus grande et plus variée pourrait aider à améliorer la robustesse du modèle, en lui fournissant une meilleure représentation des variations possibles au sein de la population ciblée.
 
+Par ailleurs, il est intéressant de noter que le modèle s'est montré particulièrement efficace pour identifier la présence de la maladie. Cependant, une grande partie des erreurs observées concerne des faux positifs, c'est-à-dire des individus sains classifiés à tort comme malades. Cette tendance du modèle à « errer du côté de la prudence » pourrait être vue comme un avantage dans des contextes cliniques où il est crucial de ne pas laisser passer de cas non diagnostiqués de maladies graves. En effet, dans une telle configuration, les coûts liés à un faux positif (par exemple, des tests de confirmation supplémentaires) sont généralement moins lourds que les conséquences d'un faux négatif, où une maladie non détectée pourrait s'aggraver.
+
+Cela implique que si le modèle était utilisé en support dans un contexte clinique, il serait particulièrement fiable pour confirmer l'absence de la maladie, réduisant ainsi le risque de manquer des diagnostics chez des patients réellement malades. Les cas identifiés comme positifs par le modèle devraient cependant être suivis d'une confirmation diagnostique par un professionnel de santé pour vérifier l'exactitude de la prédiction.
+
+En conclusion, bien que les résultats de notre modèle nécessitent une amélioration de la précision et de la généralisation à travers l'usage de données de validation plus conséquentes, ses capacités actuelles suggèrent qu'il pourrait servir efficacement comme outil de présélection, réduisant le risque de non-détection des maladies dans les premiers stades. Cela pourrait être particulièrement utile dans des environnements à ressources limitées où les options de dépistage sont restreintes.
 
 
 # Questions générales
 
+> **De la consigne : Les modèles CNN sont plus profonds (ils ont plus de couches), ont-ils plus de poids que les modèles peu profonds ? expliquer avec un exemple.**
 
+Oui, il est communément admis que les réseaux de neurones convolutifs (CNN) plus profonds, ayant plus de couches, ont généralement une capacité plus grande en termes de nombre de paramètres (ou "poids") par rapport aux réseaux moins profonds. Cela est dû à l'augmentation du nombre de couches, chacune pouvant contenir des ensembles de filtres ou des neurones qui ajoutent des paramètres au modèle.
 
+Cependant, ce n'est pas toujours le cas que plus de couches signifient automatiquement beaucoup plus de paramètres. En effet, l'architecture d'un réseau, y compris la taille des filtres et le pas de convolution, peut influencer de manière significative le nombre total de poids. Par exemple, un réseau peu profond mais avec une couche entièrement connectée très large peut parfois avoir plus de paramètres qu'un réseau plus profond avec des couches convolutives et des filtres plus petits ou plus de couches de pooling.
 
+Pour illustrer, considérons deux exemples hypothétiques :
+
+- **Modèle peu profond** : Ce modèle contient une seule couche entièrement connectée avec 1 000 neurones, chacun connecté à 1 000 entrées. Cela donne 1 000 x 1 000 = 1 000 000 de paramètres, sans compter les biais.
+- **Modèle profond** : Ce modèle consiste en plusieurs couches convolutives, chacune avec des filtres de taille 3x3, utilisés sur plusieurs canaux, mais avec moins de connexions denses. Si une couche a 100 filtres sur un volume d'entrée de 10x10x10, cela donne 3x3x10x100 = 9 000 paramètres par couche. Même avec plusieurs de ces couches, le nombre total peut rester inférieur à celui du modèle peu profond, en raison de la nature moins connectée des couches convolutives.
+
+En résumé, bien que les réseaux plus profonds aient souvent plus de paramètres en raison de leur complexité accrue et du nombre accru de couches, l'architecture spécifique et l'utilisation de techniques comme le pooling et des filtres de petite taille peuvent aboutir à un nombre total de paramètres qui n'est pas nécessairement proportionnel à la profondeur du réseau.
 
 
 
 # Conclusion
 
+En conclusion, notre étude démontre que l'utilisation de réseaux neuronaux convolutifs (CNN) plus profonds améliore significativement la précision de la classification des images par rapport aux méthodes conventionnelles. Ces résultats encouragent le développement continu de modèles de CNN avancés pour des applications en reconnaissance visuelle et autres domaines tels que l'analyse médicale d'images.
 
+Nous recommandons de poursuivre la recherche sur l'optimisation des architectures de CNN et d'explorer l'intégration de l'apprentissage non supervisé pour améliorer l'efficacité des modèles. Malgré les progrès réalisés, les défis liés à la généralisation des modèles nécessitent des études futures axées sur l'amélioration de la robustesse et de l'adaptabilité des CNN à divers contextes d'application.
 
