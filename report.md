@@ -67,10 +67,9 @@ Ce projet a été réalisé en utilisant Keras, une bibliothèque de réseaux ne
 
 # Reconnaissance des chiffres à partir des données brutes
 
-> Quel est l'algorithme d'apprentissage utilisé pour optimiser les poids des réseaux de neurones ? Quels sont les paramètres (arguments) utilisés par cet algorithme ? Quelle fonction de coût est utilisée ? Veuillez fournir l'équation (ou les équations).
+> **De la consigne : Quel est l'algorithme d'apprentissage utilisé pour optimiser les poids des réseaux de neurones ? Quels sont les paramètres (arguments) utilisés par cet algorithme ? Quelle fonction de coût est utilisée ? Veuillez fournir l'équation (ou les équations).**
 
 L'algorithme utilisé pour optimiser les poids est RMSprop (Root Mean Square Propagation).
-
 
 $$
 E[g^2]t = \beta E[g^2]{t-1} + (1-\beta)\left(\frac{\partial C}{\partial w}\right)^2 \
@@ -86,8 +85,77 @@ où $N$ est le nombre d'échantillons, $\vec{p_i}$ est la sortie du réseau de n
 
 ## Réseau neuronal superficiel
 
-# Reconnaissance de chiffres à partir de données brutes
-// todo
+Pour cette expérience, un réseau neuronal simple et peu profond est utilisé. Nous utilisons des données brutes pour classer les chiffres.
+
+### Hyper-paramètres
+- **Époques** : 90
+- **Couches cachées :**
+  - 50 neurones, activation sigmoïde
+- **Fonction d'activation de sortie** : softmax.
+- **Taille du lot** : 64
+- **Poids dans la couche cachée** : $784 (entrées) *\times 50 (neurones) + 50 (biais) = 39250$
+- **Poids dans la couche de sortie** : $50 (entrées de la couche cachée) \times 10 (neurones de sortie) + 10 (biais) = 510$
+- **Poids totaux** : $39250 + 510=39760$
+
+## Expérimentation
+
+### 10 neurones
+\begin{figure}[H]
+  \centering
+  \subfloat[Graphique d'erreur]{
+    \includegraphics[scale=0.45]{./figures/RAW_10neurones_g.png}
+    \label{fig:error-graph}
+  }\quad % Adjusted for more consistent spacing
+  \subfloat[Matrice de confusion]{
+    \includegraphics[scale=0.45]{./figures/RAW_10neurones_m.png}
+    \label{fig:confusion-matrix}
+  }
+  \caption{Modèle avec données brutes et 10 neurones dans la couche denses}
+  \label{fig:hog-features}
+\end{figure}
+
+
+
+
+
+
+### 50 neurones
+\begin{figure}[H]
+  \centering
+  \subfloat[Graphique d'erreur]{
+    \includegraphics[scale=0.45]{./figures/RAW_50neurones_g.png}
+    \label{fig:error-graph}
+  }\quad % Adjusted for more consistent spacing
+  \subfloat[Matrice de confusion]{
+    \includegraphics[scale=0.45]{./figures/RAW_50neurones_m.png}
+    \label{fig:confusion-matrix}
+  }
+  \caption{Modèle avec données brutes et 50 neurones dans la couche denses}
+  \label{fig:hog-features}
+\end{figure}
+
+
+
+### 150 neurones
+\begin{figure}[H]
+  \centering
+  \subfloat[Graphique d'erreur]{
+    \includegraphics[scale=0.45]{./figures/RAW_150neurones_g.png}
+    \label{fig:error-graph}
+  }\quad % Adjusted for more consistent spacing
+  \subfloat[Matrice de confusion]{
+    \includegraphics[scale=0.45]{./figures/RAW_150neurones_m.png}
+    \label{fig:confusion-matrix}
+  }
+  \caption{Modèle avec données brutes et 150 neurones dans la couche denses}
+  \label{fig:hog-features}
+\end{figure}
+
+
+## Commentaires
+On constate que le premier modèle est effectivement le plus adapté à cette situation. Plus on augmente
+plus on augmente le nombre de neurones, plus il s'adapte mal et les résultats ne sont pas meilleurs.
+Une observation générale des modèles est qu'ils confondent souvent le 9 avec le 4.
 
 # Reconnaissance des chiffres à partir des caractéristiques des données d'entrée
 
